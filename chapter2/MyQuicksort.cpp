@@ -1,3 +1,4 @@
+#include "omp.h"
 #include <vector>
 #include <boost/random.hpp>
 
@@ -23,7 +24,7 @@ void MyQuickSort( std::vector<int>::iterator begin, std::vector<int>::iterator e
   if( distance( begin, end) <= 1 ) { return; }
   
   std::vector<int>::iterator pivot = begin;
-  // Swap( begin, pivot);   // since we select the element to be the pivot, so we do not need to swap the pivot.
+  // Swap( begin, pivot);   // since the first element is selected to be the pivot, swapping the pivot position is not necessary
   
   std::vector<int>::iterator it = begin;
   it++;
@@ -45,8 +46,6 @@ void MyQuickSortParallel( std::vector<int>::iterator begin, std::vector<int>::it
   if( distance( begin, end) <= 1 ) { return; }
   
   std::vector<int>::iterator pivot = begin;
-  // Swap( begin, pivot);   // since we select the element to be the pivot, so we do not need to swap the pivot.
-  
   std::vector<int>::iterator it = begin;
   it++;
   std::vector<int>::iterator last = begin;
