@@ -13,8 +13,16 @@ void Swap( std::vector<int>::iterator it1, std::vector<int>::iterator it2) {
 void ShuffleVector( std::vector<int> &vec) {
   boost::mt19937 zGen;  // functor which generates a random number distributing [0, 2^32-1].
   for( size_t i=0; i<vec.size(); i++) {
-    Swap( static_cast< std::vector<int>::iterator >( &vec[i]), static_cast< std::vector<int>::iterator >( &vec[zGen() % vec.size()]) );
-    // Is there a better way than casting?
+    Swap( vec.begin()+i, vec.begin()+(zGen()%vec.size()) );
+    //Swap( static_cast< std::vector<int>::iterator >( &vec[i]), static_cast< std::vector<int>::iterator >( &vec[zGen() % vec.size()]) );
+  }
+}
+
+// ---------------------------------------
+void ShuffleVectorPartly( std::vector<int> &vec, size_t nNumShuffle) {
+  boost::mt19937 zGen;
+  for( size_t i=0; i<nNumShuffle; i++) {
+    Swap( vec.begin()+(zGen()%vec.size()), vec.begin()+(zGen()%vec.size()) );
   }
 }
 
@@ -42,7 +50,7 @@ void MyQuickSort( std::vector<int>::iterator begin, std::vector<int>::iterator e
 }
 
 // -----------------------------------------
-void MyQuickSortParallel( std::vector<int>::iterator begin, std::vector<int>::iterator end) {
+void MyParallelQuickSort( std::vector<int>::iterator begin, std::vector<int>::iterator end) {
   if( distance( begin, end) <= 1 ) { return; }
   
   std::vector<int>::iterator pivot = begin;
