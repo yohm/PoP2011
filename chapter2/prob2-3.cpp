@@ -16,7 +16,6 @@ void SearchSlowSequence( size_t nArraySize, size_t nNumIteration);
 // ---------------------------------------
 int main() {
 
-  /*
   std::vector<int> vecSize;
   vecSize.push_back( 1 << 8);
   vecSize.push_back( 1 << 10);
@@ -31,9 +30,8 @@ int main() {
   for( size_t i=0; i<vecSize.size(); i++) {
     std::cout << vecSize[i] << ' ' << MeasureSortTime( vecSize[i]) * 1000 << std::endl;
   }
-  */
 
-  SearchSlowSequence( 1 << 18, 1 << 10);
+  //  SearchSlowSequence( 1 << 18, 1 << 10);
 
   return 0;
 }
@@ -50,12 +48,15 @@ double MeasureSortTime( size_t nArraySize) {
   double dTotalElapsed = 0.0;
   for( int i=0; i<nIteration; i++) {
     ShuffleVector( vecInt);
-    zTm.restart();
-    MyQuickSort( vecInt.begin(), vecInt.end() );
-    // MyParallelQuickSort( vecInt.begin(), vecInt.end() );
+    // zTm.restart();
+    double dStart = omp_get_wtime();
+    // MyQuickSort( vecInt.begin(), vecInt.end() );
+    MyParallelQuickSort( vecInt.begin(), vecInt.end() );
     // MyBubbleSort( vecInt.begin(), vecInt.end() );
-    sort( vecInt.begin(), vecInt.end() );
-    dTotalElapsed += zTm.elapsed();
+    // sort( vecInt.begin(), vecInt.end() );
+    // MySmarterParallelQuickSort( vecInt.begin(), vecInt.end() );
+    // dTotalElapsed += zTm.elapsed();
+    dTotalElapsed += omp_get_wtime() - dStart;
     assert( vecSorted == vecInt);
   }
   return dTotalElapsed / nIteration;

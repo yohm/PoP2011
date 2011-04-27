@@ -83,6 +83,42 @@ void MyParallelQuickSort( std::vector<int>::iterator begin, std::vector<int>::it
 }
 
 // -----------------------------------------
+void MySmarterParallelQuickSort( std::vector<int>::iterator begin, std::vector<int>::iterator end) {
+  const int nPartsize = 64;
+  if( distance( begin, end) <= nPartsize ) { MyQuickSort( begin, end); }
+
+  MyQuickSort( begin, begin+nPartsize);
+  Swap( begin, begin+nPartsize/2);
+  
+  std::vector<int>::iterator pivot = begin;
+  std::vector<int>::iterator it = begin+nPartsize;
+  std::vector<int>::iterator last = begin+nPartsize/2;
+  for( ; it != end; it++) {
+    if( *it <= *pivot) {
+      last++;
+      Swap( it, last);
+    }
+  }
+  Swap( pivot, last);
+
+  omp_set_num_threads( 2);
+  #pragma omp parallel
+  {
+    #pragma omp sections
+    {
+      #pragma omp section
+      {
+	MyQuickSort( begin, last);
+      }
+      #pragma omp section
+      {
+	MyQuickSort( ++last, end);
+      }
+    }
+  }
+}
+
+// -----------------------------------------
 void MyBubbleSort( std::vector<int>::iterator begin, std::vector<int>::iterator end) {
   for( std::vector<int>::iterator target = begin; target != end; target++) {
     std::vector<int>::iterator temp_min = target;
